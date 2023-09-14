@@ -6,15 +6,21 @@ import { Link } from "react-router-dom";
 const Favourites = () => {
   const favourites = useSelector((state) => state.favouriteCompany.content);
   const removeFavourite = useDispatch();
-  const baseEndpoint = "https://strive-benchmark.herokuapp.com/api/jobs?company=";
+  const baseEndpoint = "https://strive-benchmark.herokuapp.com/api/jobs?company=" + favourites;
   const [favouriteResponse, setFavouriteResponse] = useState(null);
 
   const fetchFavourites = async () => {
-    const response = await fetch(baseEndpoint + favourites);
-    const data = await response.json();
-    setFavouriteResponse({ data });
+    try {
+      const response = await fetch(baseEndpoint);
+      const data = await response.json();
+      if (response.ok) {
+        setFavouriteResponse({ data });
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
-
+  console.log(favourites);
   useEffect(() => {
     fetchFavourites();
   }, []);
